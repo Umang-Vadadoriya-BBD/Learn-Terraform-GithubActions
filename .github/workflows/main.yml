@@ -52,7 +52,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color
+        run: terraform plan -no-color -var "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" -var "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}"
         if: github.event_name == 'pull_request'
         continue-on-error: true
 
