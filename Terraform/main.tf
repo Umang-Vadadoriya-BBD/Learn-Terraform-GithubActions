@@ -68,7 +68,7 @@ resource "aws_db_instance" "tutordb" {
   skip_final_snapshot    = true
   vpc_security_group_ids = [aws_security_group.allow_mssql.id]
   provisioner "local-exec" {
-    command = "sqlcmd -S ${aws_db_instance.tutordb.endpoint},${aws_db_instance.tutordb.port} -U ${self.username} -P ${self.password} -Q 'CREATE DATABASE my_database;'"
+    command = "sqlcmd -S ${aws_db_instance.tutordb.endpoint},${aws_db_instance.tutordb.port} -U ${var.DATABASE_USERNAME} -P ${var.DATABASE_PASSWORD} -Q 'CREATE DATABASE my_database;'"
   }
   tags = {
     owner         = "Umang-Vadadoriya@bbd.co.za"
