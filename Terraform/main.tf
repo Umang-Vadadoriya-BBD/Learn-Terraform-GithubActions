@@ -2,6 +2,13 @@ provider "aws" {
   region     = "eu-west-1"
 }
 
+locals {
+  tags = {
+    owner       = "Umang.Vadadoriya@bbd.co.za"
+    createdusing    = "Terraform"
+  }
+}
+
 resource "aws_default_vpc" "default_vpc" {
   tags = {
     Name = "default_vpc"
@@ -39,11 +46,7 @@ resource "aws_security_group" "allow_mssql" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = {
-    Name = "allow_mssql"
-    owner         = "Umang-Vadadoriya@bbd.co.za"
-    createdusing = "terraform-github"
-  }
+  tags = local.tags
 }
 
 variable "DATABASE_USERNAME" {
@@ -69,13 +72,18 @@ resource "aws_db_instance" "tutordb" {
   password               = var.DATABASE_PASSWORD
   skip_final_snapshot    = true
   vpc_security_group_ids = [aws_security_group.allow_mssql.id]
+
   provisioner "local-exec" {
-    command = "sqlcmd -S ${aws_db_instance.tutordb.endpoint} -U ${var.DATABASE_USERNAME} -P ${var.DATABASE_PASSWORD} -Q 'CREATE DATABASE my_database;'"
+    command = <<-EOT
+      sqlcmd -S ${aws_db_instance.tutordb.endpoint}|sed 's/.\{5\}$//' -U ${var.DATABASE_USERNAME} -P ${var.DATABASE_PASSWORD} -Q 'CREATE DATABASE my_database;';
+    EOT
   }
-  tags = {
-    owner         = "Umang-Vadadoriya@bbd.co.za"
-    createdusing = "terraform-github"
-  }
+
+  # provisioner "local-exec" {
+  #   command = ""
+  # }
+
+  tags = local.tags
 
 }
 
