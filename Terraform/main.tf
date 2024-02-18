@@ -49,10 +49,12 @@ resource "aws_security_group" "allow_mssql" {
 variable "DATABASE_USERNAME" {
   type = string
   description = "The username of database"
+  sensitive = true
 }
 variable "DATABASE_PASSWORD" {
   type = string
   description = "The password of database"
+  sensitive = true
 }
 
 resource "aws_db_instance" "tutordb" {
