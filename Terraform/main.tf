@@ -34,7 +34,7 @@ resource "aws_security_group" "allow_mssql" {
   tags = {
     Name = "allow_mssql"
     owner         = "Umang-Vadadoriya@bbd.co.za"
-    createdusing = "terraformgithub"
+    createdusing = "terraform-github"
   }
 }
 
@@ -52,12 +52,12 @@ resource "aws_db_instance" "tutordb" {
   vpc_security_group_ids = [aws_security_group.allow_mssql.id]
   provisioner "local-exec" {
     command = <<-EOT
-      sqlcmd -S${self.endpoint} -U${self.username} -P'${self.password}' -Q"CREATE DATABASE root;";
+      sqlcmd -S ${self.endpoint} -U ${self.username} -P '${self.password}' -Q "CREATE DATABASE root;";
     EOT
   }
   tags = {
     owner         = "Umang-Vadadoriya@bbd.co.za"
-    createdusing = "terraformgithub"
+    createdusing = "terraform-github"
   }
 
 }
