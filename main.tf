@@ -57,7 +57,7 @@ resource "aws_db_instance" "tutordb" {
   }
   tags = {
     owner         = "Umang-Vadadoriya@bbd.co.za"
-    created-using = "terraform-github"
+    createdusing = "terraformgithub"
   }
 
 }
