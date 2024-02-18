@@ -47,10 +47,8 @@ resource "aws_security_group" "allow_mssql" {
 }
 
 variable "DATABASE_USERNAME" {
-  type        = string
 }
 variable "DATABASE_PASSWORD" {
-  type        = string
 }
 
 resource "aws_db_instance" "tutordb" {
