@@ -34,7 +34,7 @@ resource "aws_security_group" "allow_mssql" {
   tags = {
     Name = "allow_mssql"
     owner         = "Umang-Vadadoriya@bbd.co.za"
-    created-using = "terraform-github"
+    createdusing = "terraformgithub"
   }
 }
 
