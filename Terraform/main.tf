@@ -73,7 +73,7 @@ resource "aws_db_instance" "tutordb" {
   skip_final_snapshot    = true
   vpc_security_group_ids = [aws_security_group.allow_mssql.id]
   provisioner "local-exec" {
-    command = "sqlcmd -S ${aws_db_instance.tutordb.endpoint} -U ${var.DATABASE_USERNAME} -P ${var.DATABASE_PASSWORD} -Q 'CREATE DATABASE my_database;'"
+    command = "sqlcmd -S ${aws_db_instance.tutordb.endpoint}|sed 's/.\\{5\\}$//' -U ${var.DATABASE_USERNAME} -P ${var.DATABASE_PASSWORD} -Q 'CREATE DATABASE my_database;'"
   }
 
   tags = local.tags
