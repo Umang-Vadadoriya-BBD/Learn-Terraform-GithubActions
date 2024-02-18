@@ -31,11 +31,26 @@ resource "aws_security_group" "allow_mssql" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+    egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+
   tags = {
     Name = "allow_mssql"
     owner         = "Umang-Vadadoriya@bbd.co.za"
     createdusing = "terraform-github"
   }
+}
+
+variable "DATABASE_USERNAME" {
+  type        = string
+}
+variable "DATABASE_PASSWORD" {
+  type        = string
 }
 
 resource "aws_db_instance" "tutordb" {
@@ -46,14 +61,12 @@ resource "aws_db_instance" "tutordb" {
   allocated_storage      = 20
   storage_type           = "gp2"
   publicly_accessible    = true
-  username               = "admin"
-  password               = "db39e8c15d5ef228"
+  username               = var.DATABASE_USERNAME
+  password               = var.DATABASE_PASSWORD
   skip_final_snapshot    = true
   vpc_security_group_ids = [aws_security_group.allow_mssql.id]
   provisioner "local-exec" {
-    command = <<-EOT
-      sqlcmd -S ${self.endpoint} -U ${self.username} -P '${self.password}' -Q "CREATE DATABASE root;";
-    EOT
+    command = "sqlcmd -S ${aws_db_instance.tutordb.endpoint},${aws_db_instance.tutordb.port} -U ${self.username} -P ${self.password} -Q 'CREATE DATABASE my_database;'"
   }
   tags = {
     owner         = "Umang-Vadadoriya@bbd.co.za"
@@ -61,3 +74,9 @@ resource "aws_db_instance" "tutordb" {
   }
 
 }
+
+# resource "aws_rds_database" "my_db" {
+#   name         = "my_database"
+#   engine       = aws_db_instance.tutordb.engine
+#   instance_arn = aws_db_instance.tutordb.arn
+# }
